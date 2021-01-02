@@ -1,4 +1,4 @@
-export default function humanFileSize(bytes, si = false, dp = 1) {
+export default function humanFileSize(bytes, si = true, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {

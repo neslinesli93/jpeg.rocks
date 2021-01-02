@@ -1,0 +1,42 @@
+.box {
+  padding: 80px 30px;
+  /* background-color: #dfdbe5; */
+  outline: 2px dashed #9c92ac;
+  outline-offset: -10px;
+  transition: outline-offset 0.15s ease-in-out, background-color 0.15s linear;
+}
+
+.box.box__dragging {
+  background-color: #e9e9e9;
+  outline: 2px dashed #9c92ac;
+  outline-offset: -20px;
+}
+
+.box__dragndrop {
+  display: inline;
+}
+
+.box__file {
+  position: absolute;
+  visibility: hidden;
+}
+
+.box__input {
+  width: 100%;
+  text-align: center;
+}
+
+.box__label {
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden;
+  margin: 0;
+}
+
+.box__click_upload {
+  cursor: pointer;
+}
+
+.box__click_upload {
+  text-decoration: underline;
+}

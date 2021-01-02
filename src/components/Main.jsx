@@ -23,6 +23,7 @@ class CustomFile {
     this.rawFile = rawFile;
 
     // result props
+    this.loading = this.valid;
     this.error = null;
     this.finalSize = null;
     this.src = null;
@@ -48,7 +49,7 @@ const Main = () => {
 
   const processFiles = (files) => {
     const inputFiles = Array.from(files).map((f) => new CustomFile(f));
-    setFiles(inputFiles);
+    setFiles((prev) => prev.concat(inputFiles));
 
     inputFiles
       .filter((f) => f.valid)
@@ -64,6 +65,7 @@ const Main = () => {
                     ...f,
                     finalSize: resultSize,
                     src: url,
+                    loading: false,
                   };
                 }
 
@@ -75,7 +77,7 @@ const Main = () => {
             setFiles((prev) =>
               prev.map((f) => {
                 if (f.id === file.id) {
-                  return { ...f, error: err };
+                  return { ...f, error: err, loading: false };
                 }
 
                 return f;
@@ -143,8 +145,70 @@ const Main = () => {
         </div>
       </section>
 
+      {files.length > 0 && <hr />}
+
       <section className="files__wrapper">
-        {files.map((file) => {
+        <table>
+          <tbody>
+            {files.map((file) => {
+              return (
+                <tr key={file.id}>
+                  <td>
+                    <div className="text-center">
+                      {file.src && (
+                        <div>
+                          <img src={file.src} />
+                        </div>
+                      )}
+
+                      {file.loading && (
+                        <div className="spinner">
+                          <div className="rect1"></div>
+                          <div className="rect2"></div>
+                          <div className="rect3"></div>
+                          <div className="rect4"></div>
+                          <div className="rect5"></div>
+                        </div>
+                      )}
+
+                      <small className="text-cut">{file.name}</small>
+                    </div>
+                  </td>
+
+                  <td className="text-center">
+                    {!file.valid && (
+                      <span className="alert">File not supported</span>
+                    )}
+
+                    {file.error && (
+                      <span className="alert">
+                        Error while processing the file
+                      </span>
+                    )}
+
+                    {file.valid && file.finalSize && (
+                      <span>
+                        {humanFileSize(file.initialSize)} ➜{" "}
+                        {humanFileSize(file.finalSize)}{" "}
+                        <b>(-{reductionPercentage(file)}%)</b>
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="text-center">
+                    {file.src && (
+                      <a href={file.src} download={file.name}>
+                        Download
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        {/* {files.map((file) => {
           return (
             <div key={file.id} className="result__wrapper">
               <div className="result__filename">
@@ -183,7 +247,7 @@ const Main = () => {
               </div>
             </div>
           );
-        })}
+        })} */}
       </section>
     </main>
   );
