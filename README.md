@@ -1,4 +1,4 @@
-# preact-test
+# jpeg.rocks
 
 ## CLI Commands
 
