@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
+import Header from "./components/Header";
 import Main from "./components/Main";
 import * as converter from "./converter";
 
@@ -16,7 +17,16 @@ const App = () => {
       });
   }, []);
 
-  return canRender ? <Main /> : <span>Loading...</span>;
+  if (!canRender) {
+    return <span>Loading...</span>;
+  }
+
+  return (
+    <>
+      <Header />
+      <Main />
+    </>
+  );
 };
 
 export default App;

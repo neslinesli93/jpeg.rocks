@@ -1,11 +1,17 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import { v4 as uuidv4 } from "uuid";
+import classNames from "classnames";
 
 import humanFileSize from "../utils/human-file-size";
 import readFileAsync from "../utils/read-file-async";
 import detectOrientation from "../utils/detect-image-orientation";
 import * as converter from "../converter";
+
+function reductionPercentage(file) {
+  const result = ((file.initialSize - file.finalSize) * 100) / file.initialSize;
+  return result.toFixed(1);
+}
 
 class CustomFile {
   constructor(rawFile) {
@@ -17,88 +23,169 @@ class CustomFile {
     this.rawFile = rawFile;
 
     // result props
+    this.error = null;
     this.finalSize = null;
     this.src = null;
-    this.orientation = null;
   }
 }
 
 async function processFile(file) {
   const contentBuffer = await readFileAsync(file.rawFile);
   const orientation = detectOrientation(contentBuffer);
-  console.log(`original orient: ${orientation}`);
 
   const { resultData, resultSize } = await converter.convert(
     contentBuffer,
     orientation
   );
 
-  return { resultData, resultSize, orientation };
+  return { resultData, resultSize };
 }
 
 const Main = () => {
+  const [dragTarget, setDragTarget] = useState(null);
+  const [dragging, setDragging] = useState(false);
   const [files, setFiles] = useState([]);
 
-  const onChange = (evt) => {
-    const inputFiles = Array.from(evt.target.files).map(
-      (f) => new CustomFile(f)
-    );
+  const processFiles = (files) => {
+    const inputFiles = Array.from(files).map((f) => new CustomFile(f));
     setFiles(inputFiles);
 
-    inputFiles.forEach((file) => {
-      processFile(file).then(({ resultData, resultSize, orientation }) => {
-        setFiles((prev) =>
-          prev.map((f) => {
-            if (f.id === file.id) {
-              const blob = new Blob([resultData], { type: "image/jpeg" });
-              const url = URL.createObjectURL(blob);
-              return {
-                ...f,
-                finalSize: resultSize,
-                src: url,
-                orientation,
-              };
-            }
+    inputFiles
+      .filter((f) => f.valid)
+      .forEach((file) => {
+        processFile(file)
+          .then(({ resultData, resultSize }) => {
+            setFiles((prev) =>
+              prev.map((f) => {
+                if (f.id === file.id) {
+                  const blob = new Blob([resultData], { type: "image/jpeg" });
+                  const url = URL.createObjectURL(blob);
+                  return {
+                    ...f,
+                    finalSize: resultSize,
+                    src: url,
+                  };
+                }
 
-            return f;
+                return f;
+              })
+            );
           })
-        );
+          .catch((err) => {
+            setFiles((prev) =>
+              prev.map((f) => {
+                if (f.id === file.id) {
+                  return { ...f, error: err };
+                }
+
+                return f;
+              })
+            );
+          });
       });
-    });
+  };
+
+  const stopBrowserDefaultBehaviour = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const dragOn = (e) => {
+    stopBrowserDefaultBehaviour(e);
+    if (!dragging) {
+      setDragging(true);
+    }
+
+    setDragTarget(e.target);
+  };
+
+  const dragOff = (e) => {
+    stopBrowserDefaultBehaviour(e);
+    if (dragging && e.target == dragTarget) {
+      setDragging(false);
+    }
+  };
+
+  const onDrop = (e) => {
+    stopBrowserDefaultBehaviour(e);
+    setDragging(false);
+
+    processFiles(e.dataTransfer.files);
   };
 
   return (
-    <div>
-      <input type="file" multiple onChange={onChange} />
+    <main>
+      <section>
+        <div
+          className={classNames({ box: true, box__dragging: dragging })}
+          ondrag={(e) => stopBrowserDefaultBehaviour(e)}
+          onDragStart={(e) => stopBrowserDefaultBehaviour(e)}
+          onDragOver={(e) => stopBrowserDefaultBehaviour(e)}
+          onDragEnd={(e) => stopBrowserDefaultBehaviour(e)}
+          onDragEnter={(e) => dragOn(e)}
+          onDragLeave={(e) => dragOff(e)}
+          onDrop={(e) => onDrop(e)}
+        >
+          <div className="box__input">
+            <input
+              id="droparea"
+              type="file"
+              onChange={(e) => processFiles(e.target.files)}
+              accept="image/jpeg"
+              className="box__file"
+              multiple
+            />
+            <label for="droparea" className="box__label">
+              <strong className="box__click_upload">Choose your files</strong>
+              <span className="box__dragndrop"> or drag them here</span>
+            </label>
+          </div>
+        </div>
+      </section>
 
-      <div>
-        <span>Results</span>
-      </div>
-
-      {files.map((file) => {
-        if (file.valid && file.src) {
+      <section className="files__wrapper">
+        {files.map((file) => {
           return (
-            <div key={file.id}>
-              <span>
-                <b>{file.name}</b> Initial size:{" "}
-                {humanFileSize(file.initialSize)}
-              </span>
+            <div key={file.id} className="result__wrapper">
+              <div className="result__filename">
+                <span>
+                  {file.name} <b>({humanFileSize(file.initialSize)})</b>
+                </span>
+              </div>
 
-              {file.src && <img className="small" src={file.src} />}
+              <div className="result__state">
+                {!file.valid && (
+                  <span className="alert">File not supported</span>
+                )}
 
-              <span>Final size: {humanFileSize(file.finalSize)}</span>
-              <span>Orientation: {file.orientation}</span>
+                {file.error && (
+                  <span className="alert">Error while processing the file</span>
+                )}
+
+                {file.valid && !file.error && !file.finalSize && (
+                  <progress></progress>
+                )}
+
+                {file.valid && file.finalSize && (
+                  <span>
+                    Final size: {humanFileSize(file.finalSize)}{" "}
+                    <b>(-{reductionPercentage(file)}%)</b>
+                  </span>
+                )}
+              </div>
+
+              <div className="result__download">
+                {file.src && (
+                  <a href={file.src} download={file.name}>
+                    Download
+                  </a>
+                )}
+              </div>
             </div>
           );
-        }
-
-        return (
-          <div key={file.id}>
-            <span>Invalid file: {file.name}</span>
-          </div>
-        );
-      })}
-    </div>
+        })}
+      </section>
+    </main>
   );
 };
 
