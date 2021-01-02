@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@neslinesli93/mozjpeg-wasm": "../mozjpeg-wasm",
+    "piexifjs": "^1.0.6",
     "preact": "^10.3.2",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",

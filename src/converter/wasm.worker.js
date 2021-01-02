@@ -18,7 +18,7 @@ export class JpegConverter {
     }
   }
 
-  async convert(data) {
+  async convert(data, orientation) {
     const input = new Uint8Array(data);
     const inputBuffer = this.Module._malloc(
       input.length * input.BYTES_PER_ELEMENT
@@ -30,8 +30,9 @@ export class JpegConverter {
       "number",
       "number",
       "number",
+      "number",
     ]);
-    const result = convert(inputBuffer, input.length, quality);
+    const result = convert(inputBuffer, input.length, quality, orientation);
 
     const splitted = result.split("|");
     const outputBuffer = parseInt(splitted[0], 16);

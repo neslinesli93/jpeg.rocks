@@ -10,6 +10,6 @@ export async function init() {
   }
 }
 
-export function convert(data) {
-  return instance.convert(data);
+export function convert(data, orientation) {
+  return instance.convert(data, orientation);
 }

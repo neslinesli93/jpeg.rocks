@@ -1,18 +1,4 @@
-export function readFileAsync(file) {
-  return new Promise((resolve, reject) => {
-    let reader = new FileReader();
-
-    reader.onload = (event) => {
-      resolve(event.target.result);
-    };
-
-    reader.onerror = reject;
-
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-export function humanFileSize(bytes, si = false, dp = 1) {
+export default function humanFileSize(bytes, si = false, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
@@ -22,6 +8,7 @@ export function humanFileSize(bytes, si = false, dp = 1) {
   const units = si
     ? ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+
   let u = -1;
   const r = 10 ** dp;
 

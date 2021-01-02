@@ -1,8 +1,10 @@
 import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { v4 as uuidv4 } from "uuid";
 
-import { humanFileSize, readFileAsync } from "../utils";
+import humanFileSize from "../utils/human-file-size";
+import readFileAsync from "../utils/read-file-async";
+import detectOrientation from "../utils/detect-image-orientation";
 import * as converter from "../converter";
 
 class CustomFile {
@@ -17,13 +19,21 @@ class CustomFile {
     // result props
     this.finalSize = null;
     this.src = null;
+    this.orientation = null;
   }
 }
 
 async function processFile(file) {
   const contentBuffer = await readFileAsync(file.rawFile);
-  const result = await converter.convert(contentBuffer);
-  return result;
+  const orientation = detectOrientation(contentBuffer);
+  console.log(`original orient: ${orientation}`);
+
+  const { resultData, resultSize } = await converter.convert(
+    contentBuffer,
+    orientation
+  );
+
+  return { resultData, resultSize, orientation };
 }
 
 const Main = () => {
@@ -36,16 +46,21 @@ const Main = () => {
     setFiles(inputFiles);
 
     inputFiles.forEach((file) => {
-      processFile(file).then(({ resultData, resultSize }) => {
+      processFile(file).then(({ resultData, resultSize, orientation }) => {
         setFiles((prev) =>
           prev.map((f) => {
             if (f.id === file.id) {
               const blob = new Blob([resultData], { type: "image/jpeg" });
               const url = URL.createObjectURL(blob);
-              return { ...f, finalSize: resultSize, src: url };
-            } else {
-              return f;
+              return {
+                ...f,
+                finalSize: resultSize,
+                src: url,
+                orientation,
+              };
             }
+
+            return f;
           })
         );
       });
@@ -72,15 +87,16 @@ const Main = () => {
               {file.src && <img className="small" src={file.src} />}
 
               <span>Final size: {humanFileSize(file.finalSize)}</span>
-            </div>
-          );
-        } else {
-          return (
-            <div key={file.id}>
-              <span>Invalid file: {file.name}</span>
+              <span>Orientation: {file.orientation}</span>
             </div>
           );
         }
+
+        return (
+          <div key={file.id}>
+            <span>Invalid file: {file.name}</span>
+          </div>
+        );
       })}
     </div>
   );
