@@ -1,22 +1,25 @@
-# jpeg.rocks
+# [JPEG.rocks](https://jpeg.rocks)
 
-## CLI Commands
+Browser-based JPEG optimizer, using Web Workers and WebAssembly.
 
-``` bash
-# install dependencies
-npm install
+[`mozjpeg-wasm`](https://github.com/neslinesli93/mozjpeg-wasm) does the heavy lifting; [`Preact`](https://preactjs.com/) and [`Water.css`](https://watercss.kognise.dev/) do the rest.
 
-# serve with hot reload at localhost:8080
-npm run dev
+## Build from source
 
-# build for production with minification
-npm run build
+Clone the repo, then install the dependencies:
 
-# test the production build locally
-npm run serve
-
-# run tests with jest and enzyme
-npm run test
+```sh
+$ yarn
 ```
 
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+Run a dev server, listening on [http://0.0.0.0:8080](http://0.0.0.0:8080):
+
+```sh
+$ yarn run dev
+```
+
+Or build a static and immediately deployable artifact (in `build/` folder):
+
+```sh
+$ yarn run build
+```
