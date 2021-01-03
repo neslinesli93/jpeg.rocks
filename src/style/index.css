@@ -32,7 +32,13 @@ hr {
 }
 
 .alert {
-  color: var(--code);
+  color: #ff495c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .alert {
+    color: var(--code);
+  }
 }
 
 .text-cut {
