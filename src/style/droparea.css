@@ -1,15 +1,19 @@
 .box {
   padding: 80px 30px;
-  /* background-color: #dfdbe5; */
   outline: 2px dashed #9c92ac;
-  outline-offset: -10px;
+  outline-offset: -2px;
   transition: outline-offset 0.15s ease-in-out, background-color 0.15s linear;
 }
 
 .box.box__dragging {
   background-color: #e9e9e9;
-  outline: 2px dashed #9c92ac;
-  outline-offset: -20px;
+  outline-offset: -12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .box.box__dragging {
+    background-color: #161f27;
+  }
 }
 
 .box__dragndrop {

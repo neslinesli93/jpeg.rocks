@@ -154,7 +154,7 @@ const Main = () => {
               return (
                 <tr key={file.id}>
                   <td>
-                    <div className="text-center">
+                    <div>
                       {file.src && (
                         <div>
                           <img src={file.src} />
@@ -162,20 +162,26 @@ const Main = () => {
                       )}
 
                       {file.loading && (
-                        <div className="spinner">
-                          <div className="rect1"></div>
-                          <div className="rect2"></div>
-                          <div className="rect3"></div>
-                          <div className="rect4"></div>
-                          <div className="rect5"></div>
+                        <div className="sk-cube-grid">
+                          <div className="sk-cube sk-cube1"></div>
+                          <div className="sk-cube sk-cube2"></div>
+                          <div className="sk-cube sk-cube3"></div>
+                          <div className="sk-cube sk-cube4"></div>
+                          <div className="sk-cube sk-cube5"></div>
+                          <div className="sk-cube sk-cube6"></div>
+                          <div className="sk-cube sk-cube7"></div>
+                          <div className="sk-cube sk-cube8"></div>
+                          <div className="sk-cube sk-cube9"></div>
                         </div>
                       )}
 
-                      <small className="text-cut">{file.name}</small>
+                      <small className="text-cut">
+                        <i>{file.name}</i>
+                      </small>
                     </div>
                   </td>
 
-                  <td className="text-center">
+                  <td>
                     {!file.valid && (
                       <span className="alert">File not supported</span>
                     )}
@@ -195,7 +201,7 @@ const Main = () => {
                     )}
                   </td>
 
-                  <td className="text-center">
+                  <td className="text-right">
                     {file.src && (
                       <a href={file.src} download={file.name}>
                         Download
@@ -207,47 +213,6 @@ const Main = () => {
             })}
           </tbody>
         </table>
-
-        {/* {files.map((file) => {
-          return (
-            <div key={file.id} className="result__wrapper">
-              <div className="result__filename">
-                <span>
-                  {file.name} <b>({humanFileSize(file.initialSize)})</b>
-                </span>
-              </div>
-
-              <div className="result__state">
-                {!file.valid && (
-                  <span className="alert">File not supported</span>
-                )}
-
-                {file.error && (
-                  <span className="alert">Error while processing the file</span>
-                )}
-
-                {file.valid && !file.error && !file.finalSize && (
-                  <progress></progress>
-                )}
-
-                {file.valid && file.finalSize && (
-                  <span>
-                    Final size: {humanFileSize(file.finalSize)}{" "}
-                    <b>(-{reductionPercentage(file)}%)</b>
-                  </span>
-                )}
-              </div>
-
-              <div className="result__download">
-                {file.src && (
-                  <a href={file.src} download={file.name}>
-                    Download
-                  </a>
-                )}
-              </div>
-            </div>
-          );
-        })} */}
       </section>
     </main>
   );

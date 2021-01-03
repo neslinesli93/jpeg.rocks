@@ -19,6 +19,10 @@ img {
   height: 100px;
 }
 
+hr {
+  margin: 12px 0;
+}
+
 .text-center {
   text-align: center;
 }
