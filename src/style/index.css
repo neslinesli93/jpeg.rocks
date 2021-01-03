@@ -23,6 +23,17 @@ hr {
   margin: 12px 0;
 }
 
+.loader_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .text-center {
   text-align: center;
 }

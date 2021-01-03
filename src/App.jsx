@@ -1,9 +1,10 @@
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
-import Header from "./components/Header";
-import Main from "./components/Main";
 import * as converter from "./converter";
+import Header from "./components/Header";
+import Loader from "./components/Loader";
+import Main from "./components/Main";
 
 const App = () => {
   const [canRender, setCanRender] = useState(false);
@@ -18,7 +19,11 @@ const App = () => {
   }, []);
 
   if (!canRender) {
-    return <span>Loading...</span>;
+    return (
+      <div className="loader_wrapper">
+        <Loader />
+      </div>
+    );
   }
 
   return (
