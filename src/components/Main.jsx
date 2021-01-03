@@ -4,9 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import DropArea from "./DropArea";
 import Files from "./Files";
-import readFileAsync from "../utils/read-file-async";
-import detectOrientation from "../utils/detect-image-orientation";
 import * as converter from "../converter";
+import detectOrientation from "../utils/detect-image-orientation";
+import generateZip from "../utils/generate-zip";
+import readFileAsync from "../utils/read-file-async";
 
 class CustomFile {
   constructor(rawFile) {
@@ -22,6 +23,7 @@ class CustomFile {
     this.error = null;
     this.finalSize = null;
     this.src = null;
+    this.blob = null;
   }
 }
 
@@ -54,8 +56,10 @@ const Main = () => {
                 if (f.id === file.id) {
                   const blob = new Blob([resultData], { type: "image/jpeg" });
                   const url = URL.createObjectURL(blob);
+
                   return {
                     ...f,
+                    blob,
                     finalSize: resultSize,
                     src: url,
                     loading: false,
@@ -84,6 +88,10 @@ const Main = () => {
     setFiles([]);
   };
 
+  const downloadAllFiles = () => {
+    generateZip(files.filter((f) => f.blob));
+  };
+
   return (
     <main>
       <section>
@@ -95,7 +103,7 @@ const Main = () => {
       {files.length > 0 && (
         <section>
           <button onClick={clearAllFiles}>Clear all</button>
-          <button>Download all files</button>
+          <button onClick={downloadAllFiles}>Download all files</button>
         </section>
       )}
 
