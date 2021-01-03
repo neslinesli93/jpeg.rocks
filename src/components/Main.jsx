@@ -40,9 +40,15 @@ async function processFile(file) {
 }
 
 const Main = () => {
+  const [firstConversionDone, setFirstConversionDone] = useState(false);
   const [files, setFiles] = useState([]);
+  const [showPreview, setShowPreview] = useState(false);
 
   const processFiles = (files) => {
+    if (!firstConversionDone) {
+      setFirstConversionDone(true);
+    }
+
     const inputFiles = Array.from(files).map((f) => new CustomFile(f));
     setFiles((prev) => prev.concat(inputFiles));
 
@@ -98,17 +104,30 @@ const Main = () => {
         <DropArea onFilesSelect={processFiles} />
       </section>
 
-      {files.length > 0 && <hr />}
+      {firstConversionDone && <hr />}
 
-      {files.length > 0 && (
-        <section>
-          <button onClick={clearAllFiles}>Clear all</button>
-          <button onClick={downloadAllFiles}>Download all files</button>
+      {firstConversionDone && (
+        <section className="buttons__wrapper">
+          <div>
+            <input
+              type="checkbox"
+              id="showPreview"
+              name="preview"
+              checked={showPreview}
+              onChange={() => setShowPreview(!showPreview)}
+            />
+            <label for="showPreview">Show preview</label>
+          </div>
+
+          <div>
+            <button onClick={clearAllFiles}>Clear all</button>
+            <button onClick={downloadAllFiles}>Download all files</button>
+          </div>
         </section>
       )}
 
-      <section className="files__wrapper">
-        <Files files={files} />
+      <section>
+        <Files files={files} previewEnabled={showPreview} />
       </section>
     </main>
   );

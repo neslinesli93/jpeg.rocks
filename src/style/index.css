@@ -46,3 +46,9 @@ hr {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.buttons__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
