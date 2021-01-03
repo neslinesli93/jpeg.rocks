@@ -16,7 +16,7 @@ const Files = ({ files, previewEnabled }) => {
           return (
             <tr key={file.id}>
               <td>
-                <div>
+                <div className="text-cut">
                   {previewEnabled && (
                     <>
                       {file.src && (
@@ -29,7 +29,7 @@ const Files = ({ files, previewEnabled }) => {
                     </>
                   )}
 
-                  <small className="text-cut">
+                  <small>
                     <i>{file.name}</i>
                   </small>
                 </div>

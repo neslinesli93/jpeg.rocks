@@ -116,7 +116,7 @@ const Main = () => {
               checked={showPreview}
               onChange={() => setShowPreview(!showPreview)}
             />
-            <label for="showPreview">Show preview</label>
+            <label for="showPreview">Show previews</label>
           </div>
 
           <div>
