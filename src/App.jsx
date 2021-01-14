@@ -5,12 +5,14 @@ import Router from "preact-router";
 import * as converter from "./converter";
 import About from "./pages/About";
 import Main from "./pages/Main";
+import Header from "./components/Header";
 
 const App = () => {
   const [canRender, setCanRender] = useState(false);
   const [initError, setInitError] = useState(null);
 
   useEffect(() => {
+    // Init worker with wasm converter
     converter
       .init()
       .then(() => setCanRender(true))
@@ -28,10 +30,14 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <Main path="/" canRender={canRender} initError={initError} />
-      <About path="/about" />
-    </Router>
+    <>
+      <Header />
+
+      <Router>
+        <Main path="/" canRender={canRender} initError={initError} />
+        <About path="/about" />
+      </Router>
+    </>
   );
 };
 

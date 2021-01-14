@@ -1,18 +1,16 @@
 import { h } from "preact";
 import { Link } from "preact-router/match";
 
-import logoLightMode from "../assets/images/logo_light_mode.png";
-import logoDarkMode from "../assets/images/logo_dark_mode.png";
-
-function getLogo() {
+function getTheme() {
   if (
+    typeof window !== "undefined" &&
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    return logoDarkMode;
+    return "/assets/images/logo_dark_mode.png";
   }
 
-  return logoLightMode;
+  return "/assets/images/logo_light_mode.png";
 }
 
 const Header = () => {
@@ -20,7 +18,7 @@ const Header = () => {
     <header>
       <nav>
         <a href="/">
-          <img alt="JPEG.rocks" src={getLogo()} class="logo" />
+          <img alt="JPEG.rocks" src={getTheme()} class="logo" />
         </a>
 
         <ul>

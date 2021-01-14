@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import DropArea from "../components/DropArea";
 import Error from "../components/Error";
 import Files from "../components/Files";
-import Header from "../components/Header";
 import Loader from "../components/Loader";
 import * as converter from "../converter";
 import detectOrientation from "../utils/detect-image-orientation";
@@ -103,8 +102,6 @@ const Main = ({ canRender, initError }) => {
 
   return (
     <main>
-      <Header />
-
       <section>
         <h1 className="text-center">Privacy-aware JPEG optimizer</h1>
         <p className="text-center">

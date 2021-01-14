@@ -1,12 +1,8 @@
 import { h } from "preact";
 
-import Header from "../components/Header";
-
 const About = () => {
   return (
     <main>
-      <Header />
-
       <section>
         <h2>How it works?</h2>
 
