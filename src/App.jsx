@@ -7,6 +7,12 @@ import About from "./pages/About";
 import Main from "./pages/Main";
 import Header from "./components/Header";
 
+import urls from "../prerender-urls.json";
+
+const getTitle = (path) => {
+  return urls.find((u) => u.url === path).title;
+};
+
 const App = () => {
   const [canRender, setCanRender] = useState(false);
   const [initError, setInitError] = useState(null);
@@ -34,8 +40,13 @@ const App = () => {
       <Header />
 
       <Router>
-        <Main path="/" canRender={canRender} initError={initError} />
-        <About path="/about" />
+        <Main
+          path="/"
+          title={getTitle("/")}
+          canRender={canRender}
+          initError={initError}
+        />
+        <About path="/about" title={getTitle("/about")} />
       </Router>
     </>
   );

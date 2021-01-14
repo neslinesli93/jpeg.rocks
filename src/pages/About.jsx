@@ -1,8 +1,11 @@
 import { h } from "preact";
+import Helmet from "preact-helmet";
 
-const About = () => {
+const About = ({ title }) => {
   return (
     <main>
+      <Helmet title={title} />
+
       <section>
         <h2>How it works?</h2>
 

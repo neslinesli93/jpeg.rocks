@@ -1,5 +1,6 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
+import Helmet from "preact-helmet";
 import { v4 as uuidv4 } from "uuid";
 
 import DropArea from "../components/DropArea";
@@ -41,7 +42,7 @@ async function processFile(file) {
   return { resultData, resultSize };
 }
 
-const Main = ({ canRender, initError }) => {
+const Main = ({ title, canRender, initError }) => {
   const [firstConversionDone, setFirstConversionDone] = useState(false);
   const [files, setFiles] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
@@ -102,6 +103,8 @@ const Main = ({ canRender, initError }) => {
 
   return (
     <main>
+      <Helmet title={title} />
+
       <section>
         <h1 className="text-center">Privacy-aware JPEG optimizer</h1>
         <p className="text-center">
