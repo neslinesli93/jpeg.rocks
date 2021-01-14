@@ -1,15 +1,14 @@
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
+import Router from "preact-router";
 
 import * as converter from "./converter";
-import Header from "./components/Header";
-import Loader from "./components/Loader";
-import Main from "./components/Main";
-import MainError from "./components/MainError";
+import About from "./pages/About";
+import Main from "./pages/Main";
 
 const App = () => {
   const [canRender, setCanRender] = useState(false);
-  const [error, setError] = useState(null);
+  const [initError, setInitError] = useState(null);
 
   useEffect(() => {
     converter
@@ -19,30 +18,20 @@ const App = () => {
         console.error(err);
 
         if (err && typeof err.toString === "function") {
-          setError(err.toString());
+          setInitError(err.toString());
         } else {
-          setError(JSON.stringify(err));
+          setInitError(JSON.stringify(err));
         }
+
+        setCanRender(true);
       });
   }, []);
 
-  if (!canRender && !error) {
-    return (
-      <div className="loader_wrapper">
-        <Loader />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <MainError error={error} />;
-  }
-
   return (
-    <>
-      <Header />
-      <Main />
-    </>
+    <Router>
+      <Main path="/" canRender={canRender} initError={initError} />
+      <About path="/about" />
+    </Router>
   );
 };
 

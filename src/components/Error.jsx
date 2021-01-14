@@ -1,9 +1,13 @@
 import { h } from "preact";
 
-const MainError = ({ error }) => {
+const Error = ({ error }) => {
   return (
-    <main>
-      <h2 className="text-center">The app could not be initialized properly</h2>
+    <section>
+      <hr />
+
+      <h2 className="text-center">
+        Oops, the app could not be initialized properly
+      </h2>
       <p>
         Please try to reload the page. If this keeps happening, you may need a
         modern browser that supports{" "}
@@ -20,8 +24,8 @@ const MainError = ({ error }) => {
           <code>{error}</code>
         </pre>
       </p>
-    </main>
+    </section>
   );
 };
 
-export default MainError;
+export default Error;

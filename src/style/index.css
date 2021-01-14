@@ -17,11 +17,18 @@ nav {
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
-  /* margin-bottom: 7rem; */
 }
 
 nav > ul {
   list-style: none;
+}
+
+nav > ul > li {
+  display: inline-block;
+}
+
+nav > ul > li:not(:last-child) {
+  margin-right: 16px;
 }
 
 td {
@@ -41,7 +48,6 @@ hr {
 }
 
 .loader_wrapper {
-  position: absolute;
   top: 0;
   left: 0;
   height: 100%;

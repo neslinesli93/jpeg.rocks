@@ -1,14 +1,18 @@
 import { h } from "preact";
+import { Link } from "preact-router/match";
+
+import logoLightMode from "../assets/images/logo_light_mode.png";
+import logoDarkMode from "../assets/images/logo_dark_mode.png";
 
 function getLogo() {
   if (
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    return "/assets/images/logo_dark_mode.png";
+    return logoDarkMode;
   }
 
-  return "/assets/images/logo_light_mode.png";
+  return logoLightMode;
 }
 
 const Header = () => {
@@ -21,23 +25,23 @@ const Header = () => {
 
         <ul>
           <li>
+            <Link href="/about" activeClassName="active">
+              About
+            </Link>
+          </li>
+
+          <li>
             <a
               href="https://github.com/neslinesli93/jpeg.rocks"
               target="_blank"
               rel="noreferrer"
+              native
             >
-              About
+              Source ➚
             </a>
           </li>
         </ul>
       </nav>
-
-      <h1 className="text-center">Privacy-aware JPEG optimizer</h1>
-
-      <p className="text-center">
-        The images you upload <u>never</u> leave your device: all the processing
-        is done entirely in the browser
-      </p>
     </header>
   );
 };
