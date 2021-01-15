@@ -151,7 +151,7 @@ const Main = ({ title, canRender, initError }) => {
                   <span>{quality}</span>
                 </div>
 
-                <div>
+                <div className="text-right">
                   <button onClick={applySettings}>Apply settings</button>
                 </div>
               </details>
