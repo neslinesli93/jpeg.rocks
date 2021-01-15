@@ -12,13 +12,16 @@ import detectOrientation from "../utils/detect-image-orientation";
 import generateZip from "../utils/generate-zip";
 import readFileAsync from "../utils/read-file-async";
 
+const DEFAULT_QUALITY = 75;
+const JPEG_MIME_TYPE = "image/jpeg";
+
 class CustomFile {
   constructor(rawFile) {
     // initial props
     this.id = uuidv4();
     this.name = rawFile.name;
     this.initialSize = rawFile.size;
-    this.valid = rawFile.type === "image/jpeg";
+    this.valid = rawFile.type === JPEG_MIME_TYPE;
     this.rawFile = rawFile;
 
     // result props
@@ -30,13 +33,14 @@ class CustomFile {
   }
 }
 
-async function processFile(file) {
+async function processFile(file, quality) {
   const contentBuffer = await readFileAsync(file.rawFile);
   const orientation = detectOrientation(contentBuffer);
 
   const { resultData, resultSize } = await converter.convert(
     contentBuffer,
-    orientation
+    orientation,
+    quality
   );
 
   return { resultData, resultSize };
@@ -46,6 +50,7 @@ const Main = ({ title, canRender, initError }) => {
   const [firstConversionDone, setFirstConversionDone] = useState(false);
   const [files, setFiles] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [quality, setQuality] = useState(DEFAULT_QUALITY);
 
   const processFiles = (files) => {
     if (!firstConversionDone) {
@@ -58,12 +63,12 @@ const Main = ({ title, canRender, initError }) => {
     inputFiles
       .filter((f) => f.valid)
       .forEach((file) => {
-        processFile(file)
+        processFile(file, quality)
           .then(({ resultData, resultSize }) => {
             setFiles((prev) =>
               prev.map((f) => {
                 if (f.id === file.id) {
-                  const blob = new Blob([resultData], { type: "image/jpeg" });
+                  const blob = new Blob([resultData], { type: JPEG_MIME_TYPE });
                   const url = URL.createObjectURL(blob);
 
                   return {
@@ -93,6 +98,17 @@ const Main = ({ title, canRender, initError }) => {
       });
   };
 
+  const applySettings = () => {
+    if (files.length === 0) {
+      return;
+    }
+
+    // Reset files state
+    setFiles([]);
+    // Reprocess existing files
+    processFiles(files.map((f) => f.rawFile));
+  };
+
   const clearAllFiles = () => {
     setFiles([]);
   };
@@ -119,6 +135,29 @@ const Main = ({ title, canRender, initError }) => {
 
       {!initError && canRender && (
         <>
+          <section>
+            <p>
+              <details>
+                <summary>Settings</summary>
+
+                <div className="quality-wrapper">
+                  <span>Quality</span>
+                  <input
+                    type="range"
+                    value={quality}
+                    onInput={(e) => setQuality(e.target.value)}
+                    className="quality-slider"
+                  />
+                  <span>{quality}</span>
+                </div>
+
+                <div>
+                  <button onClick={applySettings}>Apply settings</button>
+                </div>
+              </details>
+            </p>
+          </section>
+
           <section>
             <DropArea onFilesSelect={processFiles} />
           </section>

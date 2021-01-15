@@ -18,14 +18,13 @@ export class JpegConverter {
     }
   }
 
-  async convert(data, orientation) {
+  async convert(data, orientation, quality) {
     const input = new Uint8Array(data);
     const inputBuffer = this.Module._malloc(
       input.length * input.BYTES_PER_ELEMENT
     );
     this.Module.HEAPU8.set(input, inputBuffer);
 
-    const quality = 75;
     const convert = this.Module.cwrap("convert", "string", [
       "number",
       "number",
