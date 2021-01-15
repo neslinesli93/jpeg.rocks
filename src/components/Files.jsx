@@ -5,7 +5,12 @@ import humanFileSize from "../utils/human-file-size";
 
 function reductionPercentage(file) {
   const result = ((file.initialSize - file.finalSize) * 100) / file.initialSize;
-  return result.toFixed(1);
+
+  let sign = "-";
+  if (result < 0) {
+    sign = "+";
+  }
+  return `${sign}${Math.abs(result.toFixed(1))}`;
 }
 
 const Files = ({ files, previewEnabled }) => {
@@ -21,7 +26,13 @@ const Files = ({ files, previewEnabled }) => {
                     <>
                       {file.src && (
                         <div>
-                          <img src={file.src} />
+                          <a
+                            href={file.src}
+                            target="_blank"
+                            title="Open preview"
+                          >
+                            <img src={file.src} alt={file.name} />
+                          </a>
                         </div>
                       )}
 
@@ -50,7 +61,7 @@ const Files = ({ files, previewEnabled }) => {
                   <span>
                     {humanFileSize(file.initialSize)} ➜{" "}
                     {humanFileSize(file.finalSize)}{" "}
-                    <b>(-{reductionPercentage(file)}%)</b>
+                    <b>({reductionPercentage(file)}%)</b>
                   </span>
                 )}
               </td>

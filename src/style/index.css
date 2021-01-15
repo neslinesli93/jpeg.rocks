@@ -47,6 +47,10 @@ hr {
   margin: 12px 0;
 }
 
+details {
+  user-select: none;
+}
+
 .loader_wrapper {
   top: 0;
   left: 0;
@@ -85,4 +89,20 @@ hr {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.quality-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.quality-slider {
+  display: inline-block !important;
+  margin-left: 16px !important;
+  margin-right: 16px !important;
+  width: 180px;
+}
+
+.quality-slider:focus {
+  box-shadow: none !important;
 }
