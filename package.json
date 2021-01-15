@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "preact build --sw false --no-prerender",
+    "build": "preact build --sw false",
     "serve": "sirv build --port 8080 --cors --single",
     "dev": "preact watch",
     "lint": "eslint src",
@@ -35,6 +35,7 @@
     "jszip": "^3.5.0",
     "piexifjs": "^1.0.6",
     "preact": "^10.3.2",
+    "preact-helmet": "^4.0.0-alpha-3",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
     "uuid": "^8.3.2"

@@ -2,7 +2,7 @@ export default function humanFileSize(bytes, si = true, dp = 1) {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(bytes) < thresh) {
-    return bytes + " B";
+    return `${bytes} B`;
   }
 
   const units = si
@@ -20,5 +20,5 @@ export default function humanFileSize(bytes, si = true, dp = 1) {
     u < units.length - 1
   );
 
-  return bytes.toFixed(dp) + " " + units[u];
+  return `${bytes.toFixed(dp)} ${units[u]}`;
 }

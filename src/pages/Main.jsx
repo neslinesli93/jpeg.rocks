@@ -1,9 +1,12 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
+import Helmet from "preact-helmet";
 import { v4 as uuidv4 } from "uuid";
 
-import DropArea from "./DropArea";
-import Files from "./Files";
+import DropArea from "../components/DropArea";
+import Error from "../components/Error";
+import Files from "../components/Files";
+import Loader from "../components/Loader";
 import * as converter from "../converter";
 import detectOrientation from "../utils/detect-image-orientation";
 import generateZip from "../utils/generate-zip";
@@ -39,7 +42,7 @@ async function processFile(file) {
   return { resultData, resultSize };
 }
 
-const Main = () => {
+const Main = ({ title, canRender, initError }) => {
   const [firstConversionDone, setFirstConversionDone] = useState(false);
   const [files, setFiles] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
@@ -100,35 +103,53 @@ const Main = () => {
 
   return (
     <main>
+      <Helmet title={title} />
+
       <section>
-        <DropArea onFilesSelect={processFiles} />
+        <h1 className="text-center">Privacy-aware JPEG optimizer</h1>
+        <p className="text-center">
+          The images you upload <u>never</u> leave your device: all the
+          processing is done entirely in the browser
+        </p>
       </section>
 
-      {firstConversionDone && <hr />}
+      {initError && <Error error={initError} />}
 
-      {firstConversionDone && (
-        <section className="buttons__wrapper">
-          <div>
-            <input
-              type="checkbox"
-              id="showPreview"
-              name="preview"
-              checked={showPreview}
-              onChange={() => setShowPreview(!showPreview)}
-            />
-            <label for="showPreview">Show previews</label>
-          </div>
+      {!canRender && <Loader />}
 
-          <div>
-            <button onClick={clearAllFiles}>Clear all</button>
-            <button onClick={downloadAllFiles}>Download all files</button>
-          </div>
-        </section>
+      {!initError && canRender && (
+        <>
+          <section>
+            <DropArea onFilesSelect={processFiles} />
+          </section>
+
+          {firstConversionDone && <hr />}
+
+          {firstConversionDone && (
+            <section className="buttons__wrapper">
+              <div>
+                <input
+                  type="checkbox"
+                  id="showPreview"
+                  name="preview"
+                  checked={showPreview}
+                  onChange={() => setShowPreview(!showPreview)}
+                />
+                <label for="showPreview">Show previews</label>
+              </div>
+
+              <div>
+                <button onClick={clearAllFiles}>Clear all</button>
+                <button onClick={downloadAllFiles}>Download all files</button>
+              </div>
+            </section>
+          )}
+
+          <section>
+            <Files files={files} previewEnabled={showPreview} />
+          </section>
+        </>
       )}
-
-      <section>
-        <Files files={files} previewEnabled={showPreview} />
-      </section>
     </main>
   );
 };
