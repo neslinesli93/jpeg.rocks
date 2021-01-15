@@ -24,7 +24,7 @@ const About = ({ title }) => {
         <p>
           Because it's a good fit for most usages: the resulting images cannot
           be distinguished from the originals, and the image size improves
-          drammatically. However, if you need pixel-perfect results this tool is
+          dramatically. However, if you need pixel-perfect results this tool is
           not for you. But we are planning to add lossless re-encoding soon :)
         </p>
 

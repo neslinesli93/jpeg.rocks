@@ -1,24 +1,34 @@
 import { h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 import { Link } from "preact-router/match";
 
-function getTheme() {
+import lightLogo from "../assets/images/logo_light_mode.png";
+import darkLogo from "../assets/images/logo_dark_mode.png";
+
+function getLogoByTheme() {
   if (
     typeof window !== "undefined" &&
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    return "/assets/images/logo_dark_mode.png";
+    return darkLogo;
   }
 
-  return "/assets/images/logo_light_mode.png";
+  return lightLogo;
 }
 
 const Header = () => {
+  const [logo, setLogo] = useState(lightLogo);
+
+  useEffect(() => {
+    setLogo(getLogoByTheme());
+  }, []);
+
   return (
     <header>
       <nav>
         <a href="/">
-          <img alt="JPEG.rocks" src={getTheme()} class="logo" />
+          <img alt="JPEG.rocks" src={logo} class="logo" />
         </a>
 
         <ul>
