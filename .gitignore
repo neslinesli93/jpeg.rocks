@@ -2,3 +2,5 @@
 /build
 /*.log
 /size-plugin.json
+/tests/node_modules
+/tests/cypress/downloads
