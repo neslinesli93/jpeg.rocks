@@ -29,7 +29,7 @@
     "sirv-cli": "1.0.3"
   },
   "dependencies": {
-    "@neslinesli93/mozjpeg-wasm": "^1.0.2",
+    "@neslinesli93/mozjpeg-wasm": "^1.0.3",
     "classnames": "^2.2.6",
     "file-saver": "^2.0.5",
     "jszip": "^3.5.0",
