@@ -186,7 +186,7 @@ const Main = ({ title, canRender, initError }) => {
             </section>
           )}
 
-          <section>
+          <section className="files__wrapper">
             <Files files={files} previewEnabled={showPreview} />
           </section>
         </>
