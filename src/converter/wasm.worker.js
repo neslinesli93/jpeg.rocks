@@ -29,7 +29,6 @@ export class JpegConverter {
     // 1) [New] Returns a struct with two u32 fields: pointer and size
     // 2) [Deprecated] Returns a string with "pointer|size"
     try {
-      console.log("new convert");
       const convert = this.Module.cwrap("new_convert", "number", [
         "number",
         "number",
@@ -50,7 +49,6 @@ export class JpegConverter {
 
       return { resultData, resultSize };
     } catch (error) {
-      console.log("old convert");
       const convert = this.Module.cwrap("convert", "string", [
         "number",
         "number",
