@@ -25,24 +25,49 @@ export class JpegConverter {
     );
     this.Module.HEAPU8.set(input, inputBuffer);
 
-    const convert = this.Module.cwrap("convert", "string", [
-      "number",
-      "number",
-      "number",
-      "number",
-    ]);
-    const result = convert(inputBuffer, input.length, quality, orientation);
+    // Deal with possibly different versions of the WASM module:
+    // 1) [New] Returns a struct with two u32 fields: pointer and size
+    // 2) [Deprecated] Returns a string with "pointer|size"
+    try {
+      const convert = this.Module.cwrap("new_convert", "number", [
+        "number",
+        "number",
+        "number",
+        "number",
+      ]);
+      const result = convert(inputBuffer, input.length, quality, orientation);
 
-    const splitted = result.split("|");
-    const outputBuffer = parseInt(splitted[0], 16);
-    const resultSize = parseInt(splitted[1], 10);
+      const outputBuffer = this.Module.HEAPU32[result / 4];
+      const resultSize = this.Module.HEAPU32[result / 4 + 1];
 
-    const resultData = new Uint8Array(
-      this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
-    );
+      const resultData = new Uint8Array(
+        this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
+      );
 
-    this.Module._free(inputBuffer);
+      this.Module._free(inputBuffer);
+      this.Module._free(outputBuffer);
 
-    return { resultData, resultSize };
+      return { resultData, resultSize };
+    } catch (error) {
+      const convert = this.Module.cwrap("convert", "string", [
+        "number",
+        "number",
+        "number",
+        "number",
+      ]);
+      const result = convert(inputBuffer, input.length, quality, orientation);
+
+      const splitted = result.split("|");
+      const outputBuffer = parseInt(splitted[0], 16);
+      const resultSize = parseInt(splitted[1], 10);
+
+      const resultData = new Uint8Array(
+        this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
+      );
+
+      this.Module._free(inputBuffer);
+
+      return { resultData, resultSize };
+    }
   }
 }
