@@ -25,23 +25,40 @@ export class JpegConverter {
     );
     this.Module.HEAPU8.set(input, inputBuffer);
 
-    const convert = this.Module.cwrap("convert", "string", [
+    const convert = this.Module.cwrap("convert", "number", [
       "number",
       "number",
       "number",
       "number",
     ]);
     const result = convert(inputBuffer, input.length, quality, orientation);
+    let resultData = null;
+    let resultSize = null;
 
-    const splitted = result.split("|");
-    const outputBuffer = parseInt(splitted[0], 16);
-    const resultSize = parseInt(splitted[1], 10);
+    // Deal with possibly different versions of the WASM module:
+    // 1) [Deprecated] Returns a string with "pointer|size"
+    // 2) [New] Returns a struct with two u32 fields: pointer and size
+    if (typeof result === "string") {
+      const splitted = result.split("|");
+      const outputBuffer = parseInt(splitted[0], 16);
+      resultSize = parseInt(splitted[1], 10);
 
-    const resultData = new Uint8Array(
-      this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
-    );
+      resultData = new Uint8Array(
+        this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
+      );
 
-    this.Module._free(inputBuffer);
+      this.Module._free(inputBuffer);
+    } else {
+      const outputBuffer = this.Module.HEAPU32[result / 4];
+      resultSize = this.Module.HEAPU32[result / 4 + 1];
+
+      resultData = new Uint8Array(
+        this.Module.HEAPU8.subarray(outputBuffer, outputBuffer + resultSize)
+      );
+
+      this.Module._free(inputBuffer);
+      this.Module._free(outputBuffer);
+    }
 
     return { resultData, resultSize };
   }

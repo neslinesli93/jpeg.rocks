@@ -85,6 +85,8 @@ const Main = ({ title, canRender, initError }) => {
             );
           })
           .catch((err) => {
+            console.error(err);
+
             setFiles((prev) =>
               prev.map((f) => {
                 if (f.id === file.id) {
