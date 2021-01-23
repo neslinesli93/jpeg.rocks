@@ -8,10 +8,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js 12
         uses: actions/setup-node@v1
         with:
           node-version: "12"
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn build
+      - name: Install deps
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Build artifact
+        run: yarn build
+
+      - name: Start server in the background
+        run: yarn serve &
+
+      - name: Install e2e deps
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: tests
+
+      - name: Install Cypress and run tests
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: tests
