@@ -112,6 +112,9 @@ const Main = ({ title, canRender, initError }) => {
   };
 
   const clearAllFiles = () => {
+    // Release URL objects that point to blobs
+    files.filter((f) => f.src).forEach((f) => URL.revokeObjectURL(f.src));
+    // Reset files state
     setFiles([]);
   };
 
