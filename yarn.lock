@@ -935,10 +935,10 @@
   dependencies:
     extend "3.0.2"
 
-"@neslinesli93/mozjpeg-wasm@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@neslinesli93/mozjpeg-wasm/-/mozjpeg-wasm-1.0.3.tgz#71cf1354cd7416ad12800ced19770632162e07e6"
-  integrity sha512-qfkHA+MPv3SBwz7xp+SKlwAM9kjmrHTRjIDdfMLECG9BVPkhKSgm6Siq75ZSMcw62oB9L1KybhWdHQGDku60/Q==
+"@neslinesli93/mozjpeg-wasm@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@neslinesli93/mozjpeg-wasm/-/mozjpeg-wasm-2.0.0.tgz#0ac29216b75804d5760acf69ea96e8586f2791b9"
+  integrity sha512-FwIcqFyHrGb3cbxnwoQiE+j39J/J1Io9+gaeY5T+GljeM+32OYR5C3Ioibg9vkHoNsWa/PFWmAq7va31oGFfEA==
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
