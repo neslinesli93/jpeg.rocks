@@ -15,11 +15,11 @@ $ yarn
 Run a dev server, listening on [http://0.0.0.0:8080](http://0.0.0.0:8080):
 
 ```sh
-$ yarn run dev
+$ yarn dev
 ```
 
 Or build a static and immediately deployable artifact (in `build/` folder):
 
 ```sh
-$ yarn run build
+$ yarn build
 ```
